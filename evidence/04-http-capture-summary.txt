@@ -1,0 +1,20 @@
+=== HTTP requests observed in login_hnap.pcap (44 packets, 192.168.0.51 -> 192.168.0.50:80) ===
+
+00:06:53.098511 lo    In  IP 192.168.0.51.47591 > 192.168.0.50.80: Flags [P.], seq 1:175, ack 1, win 512, options [nop,nop,TS val 3399273231 ecr 871948834], length 174: HTTP: GET / HTTP/1.1
+....3.."GET / HTTP/1.1
+00:06:53.554270 lo    In  IP 192.168.0.50.80 > 192.168.0.51.47591: Flags [P.], seq 1:4190, ack 175, win 512, options [nop,nop,TS val 871949290 ecr 3399273231], length 4189: HTTP: HTTP/1.1 200 OK
+3.......HTTP/1.1 200 OK
+00:06:53.559727 lo    In  IP 192.168.0.51.47591 > 192.168.0.50.80: Flags [P.], seq 175:430, ack 33452, win 512, options [nop,nop,TS val 3399273692 ecr 871949294], length 255: HTTP: POST /session.cgi HTTP/1.1
+....3...POST /session.cgi HTTP/1.1
+....3...REPORT_METHOD=xml&ACTION=login_prepare_hnap&USER=Admin
+00:06:53.657275 lo    In  IP 192.168.0.50.80 > 192.168.0.51.47591: Flags [P.], seq 33452:33787, ack 484, win 512, options [nop,nop,TS val 871949393 ecr 3399273692], length 335: HTTP: HTTP/1.1 200 OK
+3..Q....HTTP/1.1 200 OK
+00:06:53.704291 lo    In  IP 192.168.0.51.47591 > 192.168.0.50.80: Flags [P.], seq 484:740, ack 33792, win 512, options [nop,nop,TS val 3399273837 ecr 871949437], length 256: HTTP: POST /session.cgi HTTP/1.1
+...m3..}POST /session.cgi HTTP/1.1
+...m3...REPORT_METHOD=xml&ACTION=login_hnap&USER=Admin&PASSWD=06415EAA810B326D512B75E06AEF07A6&CAPTCHA=&UID=HsRjEh5ObM
+00:06:53.798108 lo    In  IP 192.168.0.50.80 > 192.168.0.51.47591: Flags [P.], seq 33792:34132, ack 850, win 512, options [nop,nop,TS val 871949534 ecr 3399273837], length 340: HTTP: HTTP/1.1 200 OK
+3......mHTTP/1.1 200 OK
+
+--- raw request bodies (strings from the capture) ---
+REPORT_METHOD=xml&ACTION=login_hnap&USER=Admin&PASSWD=06415EAA810B326D512B75E06AEF07A6&CAPTCHA=&UID=HsRjEh5ObM
+REPORT_METHOD=xml&ACTION=login_prepare_hnap&USER=Admin

@@ -1,0 +1,105 @@
+== Static evidence: account node, empty-password branch and runtime database ==
+
+etc/defnodes/defaultvalue.xml (factory node file):
+		<account>
+			<count>1</count>
+			<max>1</max>
+			<entry>
+				<name>Admin</name>
+				<password></password>
+				<encrypted>0</encrypted>
+				<group>0</group>
+			</entry>
+		</account>
+		<account>
+			<entry>
+				<username>Admin</username>
+				<passwd></passwd>
+				<entry>
+					<path>root</path>
+					<permission>rw</permission>
+				</entry>
+			</entry>
+		</account>
+
+etc/defnodes/defaultvalue.php (executed by /etc/scripts/dbload.sh):
+25:setattr("/runtime/tmpdevdata/password" ,"get","devdata get -e password");
+26-setattr("/runtime/tmpdevdata/sn" ,"get","devdata get -e sn");
+27-setattr("/runtime/tmpdevdata/pin" ,"get","devdata get -e pin");
+28-
+29-function changes_default_wifi($phyinfuid,$ssid,$password,$mac)
+30-{
+31-	$n_root_phyinf=XNODE_getpathbytarget("", "phyinf", "uid", $phyinfuid, 0);
+32-	if($n_root_phyinf=='') {
+--
+132:$password = query("/runtime/tmpdevdata/password");
+133-if($password=="00000000" || strlen($password)<8) {
+134-	set("/device/account/entry/password", "");
+135-} else {
+136-	set("/device/account/entry/password", $password);
+137-}
+138-
+139-$sn = query("/runtime/tmpdevdata/sn");
+
+etc/services/DEVICE.ACCOUNT.php (service DEVICE.ACCOUNT start):
+/* prepare the passwd file: /tmp/passwd that will be removed as the zipped /var/passwd generated */
+$file = "/tmp/passwd";
+fwrite("w", $file, "");
+
+$cnt = query("/device/account/count");
+$i = 0;
+
+while ($i < $cnt)
+{
+	$i++;
+	$name	= get("s", "/device/account/entry:".$i."/name");
+	$pwd	= get("s", "/device/account/entry:".$i."/password");
+	$encrypted	= get("s", "/device/account/entry:".$i."/encrypted");
+	if($encrypted != "1") {
+		$encrypted = "0";		
+	}
+	$grp	= get("s", "/device/account/entry:".$i."/group");
+	TRACE_debug('  DEVICE.ACCOUNT:'.$cnt.'.'.$i.' "'.$name.'" "'.$pwd.'" "'.$encrypted.'" "'.$grp.'"');
+	fwrite("a", $file, '"'.$name.'" "'.$pwd.'" "'.$grp.'" "'.$encrypted.'"\n');
+	if(query("/inf:1/hnap") == "1" || query("/inf:2/hnap") == "1") {
+		fwrite("w", "/var/etc/hnapasswd", $name.":".$pwd."\n");// Generate the password for HNAP Joseph_Chao
+	}
+}
+event("PASSWD.ZIP");    // /tmp/passwd is saved into zip format in /var/passwd and removed.
+
+etc/events/PASSWD.sh:
+#!/bin/sh
+if [ "$1" == "ZIP" ]; then
+    tar czf /var/passwd -C /tmp passwd
+    rm /tmp/passwd
+elif [ "$1" == "UNZIP" ]; then
+    tar xzf /var/passwd -C /tmp/
+fi
+exit 0
+
+etc/init0.d/S65user.sh:
+#!/bin/sh
+echo [$0]: $1 ... > /dev/console
+if [ "$1" = "start" ]; then
+	[ -d /var/home ] || mkdir /var/home
+	echo -n > /var/etc/passwd
+	echo -n > /var/etc/group
+	echo -n > /var/etc/shadow
+	service DEVICE.ACCOUNT start
+else
+	service DEVICE.ACCOUNT stop
+fi
+
+runtime database values observed while the vendor binaries ran:
+  /device/account/count            = 1
+  /device/account/entry:1/name     = Admin
+  /device/account/entry:1/password = (empty)
+  /device/account/entry:1/group    = 0
+  /runtime/tmpdevdata/password     = (empty -> strlen<8 -> empty-password branch)
+  /device/session/captcha          = 0
+  /inf:1/hnap                      = 1
+
+runtime files produced by the vendor binaries:
+  /tmp/passwd          = "Admin" "" "0" "0"
+  /var/etc/hnapasswd   = Admin:
+  /var/session/sesscfg = "180" "128" "16" "0"

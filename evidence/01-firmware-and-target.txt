@@ -1,0 +1,24 @@
+== DHP-W610AV (1.02EUb03) firmware and target ==
+
+outer package: DHP-W610AV_fw_reva_102eub03_EU_multi_20180504.zip
+  sha256 092f435e2c98685da166505eec7fb151669c6c1bf7f8b70b8b8f07b4df21247c
+  download https://ftp.dlink.de/dhp/dhp-w610av/driver_software/DHP-W610AV_fw_reva_102eub03_EU_multi_20180504.zip
+inner image: DHPW610AVA1_FW102EUb03.bin
+  sha256 6143d9ea3f1d46a8427d2e25ccc075357f663c0aef2d5aa2996b73243a1a7e16
+  container: D-Link DLOB (signature=hpw610av_dlob_w610av_EU), plaintext
+  SquashFS 4.0 (lzma, little endian) at offset 0x160090 (1441936)
+
+key files:
+  etc/defnodes/defaultvalue.xml      sha256 3a22310a36e3b293dbe2b7255936876575bd7f9580895e3ff14b4a3bb08c2f7d
+  etc/defnodes/defaultvalue.php      sha256 c4350acc96a6570ebd4c83de49c37ef700f1ecbf78947f51eaee05d00055e17c
+  etc/services/DEVICE.ACCOUNT.php    sha256 b726e9c1e508dcdde84ba9217aadd6fa44d3da15a63216e9d0cd67de976ae97f
+  etc/events/PASSWD.sh               sha256 fa51882a872897667e508ed26fbcdb3fd9fcda3116ed62eae1fd8d5cb1e5d893
+  etc/init0.d/S65user.sh             sha256 22d64f793c827fa36497a0ea7208caabe450baefcdec7c78c768ecef3061c8e6
+  sbin/httpd                         sha256 4433ccda8ae363216613abbc1b9cb4225be11f4ad2344e959cfe97bb1f950f30
+  htdocs/cgibin                      sha256 fd9f21a2d026150df5626bb40099d609757fb1edd03874660665600d1ac7dd5e
+  htdocs/web/js/postxml.js           sha256 0c920feda8de89a5d24abf92cdf8deb94bf4b51f3ad792a2b19fef8dd49a54ba
+  htdocs/webinc/templates.php        sha256 a3e2f0391559e020a7a8b3b35389feab9cfdcccb92d38f2ef1fb1cd972cb60ee
+
+previous release 1.01EUb07 (empty administrator password unconditionally):
+  DHP-W610AV_fw_reva_101eub07_EU_en_20171019.zip
+    sha256 dadc661d6ce376024b7130b46b3857c9211dea2de2823ab846bdca2b7b0794b0
